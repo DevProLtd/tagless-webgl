@@ -2,15 +2,14 @@ package scalagl.interpreters
 
 import cats.effect._
 import cats.implicits._
-import monix.eval._
 import org.scalajs.dom
 import org.scalajs.dom.html.Canvas
-import org.scalajs.dom.raw._
 import org.scalajs.dom.raw.WebGLRenderingContext._
+import org.scalajs.dom.raw._
+import scalagl.algebra._
 
 import scala.scalajs.js.Array
 import scala.scalajs.js.typedarray.Float32Array
-import scalagl.algebra._
 
 object GLInterpreterIO extends WebGL[IO] {
 

@@ -1,9 +1,7 @@
 package scalagl
 
-import cats.effect._
-import cats.implicits._
-import scalagl.programs.{EngineProgram, Program2Point5D}
 import scalagl.interpreters._
+import scalagl.programs.EngineProgram
 
 object Main {
 

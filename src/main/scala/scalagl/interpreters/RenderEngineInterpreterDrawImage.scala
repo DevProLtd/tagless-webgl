@@ -1,32 +1,37 @@
 package scalagl.interpreters
 
-import cats.{Monad, Monoid, Order, Traverse}
+import cats.Monad
 import cats.implicits._
-import cats.effect._
 import org.scalajs.dom.ext.Color
-import org.scalajs.dom.raw.{WebGLProgram, WebGLRenderingContext, WebGLTexture}
+import org.scalajs.dom.raw.{WebGLProgram, WebGLTexture}
+import scalagl.algebra._
+import scalagl.math.{Matrix4, Quaternion, Vector4}
 
 import scala.collection.immutable.SortedMap
 import scala.collection.{Set, mutable}
 import scala.language.higherKinds
-import scalagl.algebra._
-import scalagl.math.{Matrix4, Quaternion, Vector4}
 
 case class InitializationOptions(backgroundColor: Color, textures: SortedMap[String, String])
 
 sealed trait InitializationError
+
 case class VertexShaderError(e: String) extends InitializationError
+
 case class FragmentShaderError(e: String) extends InitializationError
+
 case class ProgramLinkingError(e: String) extends InitializationError
+
 object InitializationError {
   def vertex(e: String): InitializationError = VertexShaderError(e)
+
   def fragment(e: String): InitializationError = FragmentShaderError(e)
+
   def program(e: String): InitializationError = ProgramLinkingError(e)
 }
 
 case class RenderContext(program: WebGLProgram, textures: SortedMap[String, WebGLTexture], projection: Matrix4)
 
-class RenderEngineInterpreterDrawImage[F[_]: Monad](W: DrawImage[F], D: Dom[F])
+class RenderEngineInterpreterDrawImage[F[_] : Monad](W: DrawImage[F], D: Dom[F])
   extends RenderEngine[F, InitializationOptions, InitializationError, RenderContext, WebGLTexture] {
 
   val vertSrc =

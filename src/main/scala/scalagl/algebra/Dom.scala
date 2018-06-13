@@ -4,8 +4,6 @@ import org.scalajs.dom.KeyboardEvent
 import org.scalajs.dom.html.Canvas
 import org.scalajs.dom.raw.HTMLImageElement
 
-import scala.scalajs.js
-
 
 trait Dom[F[_]] {
   def appendToBody(c: Canvas): F[Unit]

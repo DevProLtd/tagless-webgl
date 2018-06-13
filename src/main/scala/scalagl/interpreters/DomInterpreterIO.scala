@@ -1,14 +1,10 @@
 package scalagl.interpreters
 
-import cats.implicits._
 import cats.effect._
-import monix.eval._
 import org.scalajs.dom
+import org.scalajs.dom.KeyboardEvent
 import org.scalajs.dom.html.Canvas
 import org.scalajs.dom.raw.{Event, HTMLImageElement}
-import monix.execution.Scheduler.Implicits.global
-import org.scalajs.dom.KeyboardEvent
-
 import scalagl.algebra.Dom
 
 object DomInterpreterIO extends Dom[IO] {

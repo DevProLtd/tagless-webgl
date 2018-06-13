@@ -1,15 +1,12 @@
 package scalagl.programs
 
 import cats.Monad
-import cats.effect._
 import cats.implicits._
-import org.scalajs.dom.raw.WebGLRenderingContext.COLOR_BUFFER_BIT
-
 import scalagl.algebra._
 import scalagl.math.{Matrix4, Quaternion, Vector4}
 
 object Program2Point5D {
-  def simpleRace[F[_]: Monad](D: Dom[F], W: DrawImage[F]): F[Unit] = {
+  def simpleRace[F[_] : Monad](D: Dom[F], W: DrawImage[F]): F[Unit] = {
 
     val vertSrc =
       """
@@ -50,8 +47,7 @@ object Program2Point5D {
 
     val carRotation = Matrix4.forRotation(Quaternion(-0.7f, 0, 0, 0.7f))
 
-    val view = Matrix4.setLookAtM(0, -0.7f, -0.35f,
-      0, 0, 0, 0, 1, 0)
+    val view = Matrix4.setLookAtM(0, -0.7f, -0.35f, 0, 0, 0, 0, 1, 0)
 
     for {
       canvas <- W.createFullSizeCanvas()
@@ -71,17 +67,14 @@ object Program2Point5D {
       track <- W.createTextureInfo(trackImg)
       car <- W.createTextureInfo(carImg)
 
-
-
       _ <- W.clearScreen(0, 0, 0, 1)
 
       _ <- program.traverse { p =>
         W.drawImage(p, track, projectionView * trackTranslation * trackScale) *>
-        W.drawImage(p, car, projectionView * carRotation * carScale)
+          W.drawImage(p, car, projectionView * carRotation * carScale)
       }
 
     } yield ()
-
 
   }
 }

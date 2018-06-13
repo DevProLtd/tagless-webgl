@@ -17,7 +17,5 @@ trait DrawImage[F[_]] {
 }
 
 
-
-
 case class VertexShader(value: WebGLShader) extends AnyVal
 case class FragmentShader(value: WebGLShader) extends AnyVal

@@ -2,6 +2,7 @@ package scalagl.interpreters
 
 import cats._
 import cats.implicits._
+import org.scalajs.dom.html.Canvas
 import org.scalajs.dom.raw.WebGLRenderingContext._
 import org.scalajs.dom.raw.{HTMLImageElement, WebGLProgram, WebGLShader, WebGLTexture}
 
@@ -12,7 +13,7 @@ import scalagl.math.Matrix4
 
 class DrawImageInterpreterWebGL[F[_]: Monad](F: WebGL[F]) extends DrawImage[F] {
 
-  def createFullSizeCanvas() = F.createFullSizeCanvas()
+  def createFullSizeCanvas(): F[Canvas] = F.createFullSizeCanvas()
 
   def clearScreen(red: Double, green: Double, blue: Double, alpha: Double): F[Unit] =
     F.clearColor(red, green, blue, alpha) *> F.clear(COLOR_BUFFER_BIT)

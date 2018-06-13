@@ -1,18 +1,16 @@
 package scalagl.algebra
 
-import scala.collection.Set
 import scalagl.math.Vector4
 
+import scala.collection.Set
+
 trait RenderEngine[F[_], Opt, E, Context, Tex] {
+
   def initialize(options: Opt): F[Either[E, Context]]
+
   def renderLoop(c: Context, seed: RenderOutput[Tex], f: (Camera, Set[Key]) => Camera): F[Unit]
+
 }
-
-
-
-
-
-
 
 
 case class Pos2D(x: Float, y: Float)
