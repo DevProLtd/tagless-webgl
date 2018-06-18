@@ -59,7 +59,7 @@ class RenderEngineInterpreterDrawImage[F[_] : Monad](W: DrawImage[F], D: Dom[F])
       |
       |void main() {
       |   gl_FragColor = texture2D(u_texture, v_texcoord);
-      |   if(gl_FragColor.a < 0.5)
+      |   if(gl_FragColor.a < 0.2)
       |     discard;
       |}
     """.stripMargin
@@ -69,7 +69,7 @@ class RenderEngineInterpreterDrawImage[F[_] : Monad](W: DrawImage[F], D: Dom[F])
     canvas <- W.createFullSizeCanvas()
     _ <- D.appendToBody(canvas)
 
-    projection = Matrix4.forPerspective(90, canvas.width / canvas.height, 0.1f, 100f)
+    projection = Matrix4.forPerspective(90, canvas.width / canvas.height, 0.3f, 100f)
 
     fragmentShader <- W.compileFragmentShader(fragSrc)
     vertexShader <- W.compileVertexShader(vertSrc)
@@ -101,25 +101,23 @@ class RenderEngineInterpreterDrawImage[F[_] : Monad](W: DrawImage[F], D: Dom[F])
       def updated = RenderOutput(camera, previous.objects.map(o => o.behaviour(o, keySet)))
 
       def draw(r: RenderObject[WebGLTexture]): F[Unit] = {
-        val translate = Matrix4.forTranslation(Vector4(r.pos.x, r.pos.y, 0, 0))
+        val translate = Matrix4.forTranslation(Vector4(r.pos.x, r.pos.y, -1.0f, 0))
         val rotation = Matrix4.setRotationRad(r.rotation, 0, 0, 1)
 
         val rotationX =
-          if (r.modeSeven) Matrix4.forRotation(Quaternion(-0.7f, 0, 0, 0.7f))
+          if (r.modeSeven) Matrix4.forRotation(Quaternion(-0.4f, 0, 0, 0.7f))
           else Matrix4.identity
 
         val scale = Matrix4.forScale(Vector4(r.width, r.height, 1, 0))
-
         val model = translate * rotation * rotationX * scale
-
         val matrix = projectionView * model
 
         W.drawImage(c.program, r.tex, matrix)
       }
 
       for {
-        _ <- W.clearScreen(0, 0, 0, 1)
-        _ <- updated.objects.traverse_(draw)
+        _ <- W.clearScreen(0.0, 0.0, 0.14, 1)
+        _ <- updated.objects.traverse(draw)
       } yield updated
     })
 

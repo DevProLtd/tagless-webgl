@@ -39,8 +39,7 @@ class DrawImageInterpreterWebGL[F[_]: Monad](F: WebGL[F]) extends DrawImage[F] {
     _ <- F.linkProgram(program)
     success <- F.getProgramParameter(program)
     info <- F.getProgramInfoLog(program)
-  } yield if (success) Right(program) else Left("Could not link program: $info")
-
+  } yield Either.cond(success, program, s"Could not link program: $info")
 
   def createTextureInfo(img: HTMLImageElement): F[WebGLTexture] = for {
     tex <- F.createTexture()

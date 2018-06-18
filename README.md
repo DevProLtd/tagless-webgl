@@ -1,6 +1,8 @@
 # tagless-webgl
 
-The code for my talk on tagless final and WebGL.
+The code for Luka's talk on tagless final and WebGL.
+
+  I tried experimenting with it, added some features.
 
 The game is hosted at https://lukajcb.github.io/tagless-webgl/ and can be played there.
 
