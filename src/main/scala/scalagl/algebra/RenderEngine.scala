@@ -12,18 +12,18 @@ trait RenderEngine[F[_], Opt, E, Context, Tex] {
 
 }
 
-
 case class Pos2D(x: Float, y: Float)
 
 case class Camera(camPos: Vector4, lookAt: Vector4)
 
-case class RenderObject[Tex](pos: Pos2D,
-                             height: Float,
-                             width: Float,
-                             rotation: Float,
-                             modeSeven: Boolean,
-                             tex: Tex,
-                             behaviour: (RenderObject[Tex], Set[Key]) => RenderObject[Tex])
+case class RenderObject[Tex](
+      pos: Pos2D,
+      height: Float,
+      width: Float,
+      rotation: Float,
+      modeSeven: Boolean,
+      tex: Tex,
+      behaviour: (RenderObject[Tex], Set[Key]) => RenderObject[Tex])
 
 case class RenderOutput[Tex](c: Camera, objects: List[RenderObject[Tex]])
 

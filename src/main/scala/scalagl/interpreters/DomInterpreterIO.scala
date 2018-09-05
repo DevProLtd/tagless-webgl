@@ -27,10 +27,9 @@ object DomInterpreterIO extends Dom[IO] {
     IO(dom.window.requestAnimationFrame(inner(seed)))
   }
 
-
   def onKeyDown(cb: KeyboardEvent => IO[Unit]) =
     IO(dom.document.body.onkeydown = e => cb(e).unsafeRunSync())
 
   def onKeyUp(cb: KeyboardEvent => IO[Unit]) =
-    IO(dom.document.body.onkeyup = e  => cb(e).unsafeRunSync())
+    IO(dom.document.body.onkeyup = e => cb(e).unsafeRunSync())
 }

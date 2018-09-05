@@ -27,10 +27,7 @@ object GLInterpreterIO extends WebGL[IO] {
   private def gl[B](f: WebGLRenderingContext => B): IO[B] =
     IO(context) >>= (g => IO(f(g)))
 
-  def clearColor(red: Double,
-                 green: Double,
-                 blue: Double,
-                 alpha: Double): IO[Unit] =
+  def clearColor(red: Double, green: Double, blue: Double, alpha: Double): IO[Unit] =
     gl(_.clearColor(red, green, blue, alpha))
 
   def clear(flag: Int): IO[Unit] = gl(_.clear(flag))
@@ -72,36 +69,31 @@ object GLInterpreterIO extends WebGL[IO] {
   def bindTexture(tex: TextureType, texture: WebGLTexture): IO[Unit] =
     gl(_.bindTexture(TextureType.convert(tex), texture))
 
-  def texParameteri(tex: TextureType,
-                    param: TextureParam,
-                    value: TextureParamValue): IO[Unit] =
-    gl(
-      _.texParameteri(TextureType.convert(tex),
-                      TextureParam.convert(param),
-                      TextureParamValue.convert(value)))
+  def texParameteri(tex: TextureType, param: TextureParam, value: TextureParamValue): IO[Unit] =
+    gl(_.texParameteri(TextureType.convert(tex), TextureParam.convert(param), TextureParamValue.convert(value)))
 
-  def texImage2D(tex: TextureType,
-                 level: Int,
-                 internalFormat: PixelFormat,
-                 format: PixelFormat,
-                 pixelType: PixelType,
-                 pixels: HTMLImageElement): IO[Unit] =
+  def texImage2D(
+        tex: TextureType,
+        level: Int,
+        internalFormat: PixelFormat,
+        format: PixelFormat,
+        pixelType: PixelType,
+        pixels: HTMLImageElement): IO[Unit] =
     gl(
-      _.texImage2D(TextureType.convert(tex),
-                   level,
-                   PixelFormat.convert(internalFormat),
-                   PixelFormat.convert(format),
-                   PixelType.convert(pixelType),
-                   pixels))
+      _.texImage2D(
+        TextureType.convert(tex),
+        level,
+        PixelFormat.convert(internalFormat),
+        PixelFormat.convert(format),
+        PixelType.convert(pixelType),
+        pixels))
 
   def createBuffer(): IO[WebGLBuffer] = gl(_.createBuffer)
 
-  def getAttribLocation(program: WebGLProgram,
-                        name: String): IO[WebGLAttribLocation] =
+  def getAttribLocation(program: WebGLProgram, name: String): IO[WebGLAttribLocation] =
     gl(_.getAttribLocation(program, name)).map(WebGLAttribLocation)
 
-  def getUniformLocation(program: WebGLProgram,
-                         name: String): IO[WebGLUniformLocation] =
+  def getUniformLocation(program: WebGLProgram, name: String): IO[WebGLUniformLocation] =
     gl(_.getUniformLocation(program, name))
 
   def bindBuffer(target: Int, buffer: WebGLBuffer): IO[Unit] =
@@ -113,29 +105,21 @@ object GLInterpreterIO extends WebGL[IO] {
   def enableVertexAttribArray(index: WebGLAttribLocation): IO[Unit] =
     gl(_.enableVertexAttribArray(index.value))
 
-  def vertexAttribPointer(indx: WebGLAttribLocation,
-                          size: Int,
-                          `type`: Int,
-                          normalized: Boolean,
-                          stride: Int,
-                          offset: Int): IO[Unit] =
-    gl(
-      _.vertexAttribPointer(indx.value,
-                            size,
-                            `type`,
-                            normalized,
-                            stride,
-                            offset))
+  def vertexAttribPointer(
+        indx: WebGLAttribLocation,
+        size: Int,
+        `type`: Int,
+        normalized: Boolean,
+        stride: Int,
+        offset: Int): IO[Unit] =
+    gl(_.vertexAttribPointer(indx.value, size, `type`, normalized, stride, offset))
 
-  def uniformMatrix4fv(location: WebGLUniformLocation,
-                       transpose: Boolean,
-                       value: Array[Double]): IO[Unit] =
+  def uniformMatrix4fv(location: WebGLUniformLocation, transpose: Boolean, value: Array[Double]): IO[Unit] =
     gl(_.uniformMatrix4fv(location, transpose, value))
 
   def uniform1i(location: WebGLUniformLocation, x: Int): IO[Unit] =
     gl(_.uniform1i(location, x))
 
-  def drawArrays(mode: DrawMode, first: Int, count: Int): IO[Unit] = {
+  def drawArrays(mode: DrawMode, first: Int, count: Int): IO[Unit] =
     gl(_.drawArrays(DrawMode.convert(mode), first, count))
-  }
 }

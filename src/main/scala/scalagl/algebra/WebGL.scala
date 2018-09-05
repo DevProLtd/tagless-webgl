@@ -27,7 +27,13 @@ trait WebGL[F[_]] {
   def createTexture(): F[WebGLTexture]
   def bindTexture(tex: TextureType, texture: WebGLTexture): F[Unit]
   def texParameteri(tex: TextureType, param: TextureParam, value: TextureParamValue): F[Unit]
-  def texImage2D(tex: TextureType, level: Int, internalFormat: PixelFormat, format: PixelFormat, pixelType: PixelType, pixels: HTMLImageElement): F[Unit]
+  def texImage2D(
+        tex: TextureType,
+        level: Int,
+        internalFormat: PixelFormat,
+        format: PixelFormat,
+        pixelType: PixelType,
+        pixels: HTMLImageElement): F[Unit]
   def createFullSizeCanvas(): F[Canvas]
 
   def createBuffer(): F[WebGLBuffer]
@@ -36,36 +42,27 @@ trait WebGL[F[_]] {
   def bindBuffer(target: Int, buffer: WebGLBuffer): F[Unit]
   def bufferData(target: Int, data: Float32Array, usage: Int): F[Unit]
   def enableVertexAttribArray(index: WebGLAttribLocation): F[Unit]
-  def vertexAttribPointer(indx: WebGLAttribLocation, size: Int, `type`: Int, normalized: Boolean, stride: Int, offset: Int): F[Unit]
+  def vertexAttribPointer(
+        indx: WebGLAttribLocation,
+        size: Int,
+        `type`: Int,
+        normalized: Boolean,
+        stride: Int,
+        offset: Int): F[Unit]
   def uniformMatrix4fv(location: WebGLUniformLocation, transpose: Boolean, value: js.Array[Double]): F[Unit]
   def uniform1i(location: WebGLUniformLocation, x: Int): F[Unit]
   def drawArrays(mode: DrawMode, first: Int, count: Int): F[Unit]
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 sealed trait TextureType
 case object Texture2D extends TextureType
 case object TextureCubeMap extends TextureType
 object TextureType {
   val convert: TextureType => Int = {
-    case Texture2D => TEXTURE_2D
+    case Texture2D      => TEXTURE_2D
     case TextureCubeMap => TEXTURE_CUBE_MAP
   }
 }
-
 
 sealed trait TextureParam
 case object TextureWrapS extends TextureParam
@@ -73,8 +70,8 @@ case object TextureWrapT extends TextureParam
 case object TextureMinFilter extends TextureParam
 object TextureParam {
   val convert: TextureParam => Int = {
-    case TextureWrapS => TEXTURE_WRAP_S
-    case TextureWrapT => TEXTURE_WRAP_T
+    case TextureWrapS     => TEXTURE_WRAP_S
+    case TextureWrapT     => TEXTURE_WRAP_T
     case TextureMinFilter => TEXTURE_MIN_FILTER
   }
 }
@@ -85,7 +82,7 @@ case object Linear extends TextureParamValue
 object TextureParamValue {
   val convert: TextureParamValue => Int = {
     case ClampToEdge => CLAMP_TO_EDGE
-    case Linear => LINEAR
+    case Linear      => LINEAR
   }
 }
 
@@ -99,10 +96,10 @@ case object LuminanceAlpha extends PixelFormat
 object PixelFormat {
   val convert: PixelFormat => Int = {
     case DepthComponent => DEPTH_COMPONENT
-    case Alpha => ALPHA
-    case Rgb => RGB
-    case Rgba => RGBA
-    case Luminance => LUMINANCE
+    case Alpha          => ALPHA
+    case Rgb            => RGB
+    case Rgba           => RGBA
+    case Luminance      => LUMINANCE
     case LuminanceAlpha => LUMINANCE_ALPHA
   }
 }
@@ -110,7 +107,6 @@ object PixelFormat {
 sealed trait ShaderType
 case object Fragment extends ShaderType
 case object Vertex extends ShaderType
-
 
 sealed trait DrawMode
 case object Points extends DrawMode
@@ -122,13 +118,13 @@ case object TriangleStrip extends DrawMode
 case object TriangleFan extends DrawMode
 object DrawMode {
   val convert: DrawMode => Int = {
-    case Points => POINTS
-    case Lines => LINES
-    case LineLoop => LINE_LOOP
-    case LineStrip => LINE_STRIP
-    case Triangles => TRIANGLES
+    case Points        => POINTS
+    case Lines         => LINES
+    case LineLoop      => LINE_LOOP
+    case LineStrip     => LINE_STRIP
+    case Triangles     => TRIANGLES
     case TriangleStrip => TRIANGLE_STRIP
-    case TriangleFan => TRIANGLE_FAN
+    case TriangleFan   => TRIANGLE_FAN
   }
 }
 
@@ -142,13 +138,13 @@ case object UnsignedIntType extends PixelType
 case object FloatType extends PixelType
 object PixelType {
   val convert: PixelType => Int = {
-    case ByteType => BYTE
-    case UnsignedByteType => UNSIGNED_BYTE
-    case ShortType => SHORT
+    case ByteType          => BYTE
+    case UnsignedByteType  => UNSIGNED_BYTE
+    case ShortType         => SHORT
     case UnsignedShortType => UNSIGNED_SHORT
-    case IntType => INT
-    case UnsignedIntType => UNSIGNED_INT
-    case FloatType => FLOAT
+    case IntType           => INT
+    case UnsignedIntType   => UNSIGNED_INT
+    case FloatType         => FLOAT
   }
 }
 
