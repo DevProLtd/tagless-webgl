@@ -4,8 +4,8 @@ import cats.effect._
 import cats.implicits._
 import org.scalajs.dom
 import org.scalajs.dom.html.Canvas
-import org.scalajs.dom.raw.WebGLRenderingContext._
-import org.scalajs.dom.raw._
+import org.scalajs.dom.raw.WebGLRenderingContext.{COMPILE_STATUS, FRAGMENT_SHADER, LINK_STATUS, VERTEX_SHADER}
+import org.scalajs.dom.raw.{HTMLImageElement, WebGLBuffer, WebGLProgram, WebGLRenderingContext, WebGLShader, WebGLTexture, WebGLUniformLocation}
 import scalagl.algebra._
 
 import scala.scalajs.js.Array
@@ -13,7 +13,6 @@ import scala.scalajs.js.typedarray.Float32Array
 
 object GLInterpreterIO extends WebGL[IO] {
 
-  //TODO Memoize this in IO
   private lazy val can: Canvas =
     dom.document.createElement("canvas").asInstanceOf[dom.html.Canvas]
   can.width = dom.window.innerWidth.toInt
@@ -25,7 +24,7 @@ object GLInterpreterIO extends WebGL[IO] {
   val createFullSizeCanvas: IO[Canvas] = IO(can)
 
   private def gl[B](f: WebGLRenderingContext => B): IO[B] =
-    IO(context) >>= (g => IO(f(g)))
+    IO(context) >>= (ctx => IO(f(ctx)))
 
   def clearColor(red: Double, green: Double, blue: Double, alpha: Double): IO[Unit] =
     gl(_.clearColor(red, green, blue, alpha))
