@@ -29,10 +29,14 @@ object InitializationError {
   def program(e: String): InitializationError = ProgramLinkingError(e)
 }
 
-case class RenderContext(program: WebGLProgram, textures: SortedMap[String, WebGLTexture], projection: Matrix4, initializationOptions: InitializationOptions)
+case class RenderContext(
+      program: WebGLProgram,
+      textures: SortedMap[String, WebGLTexture],
+      projection: Matrix4,
+      initializationOptions: InitializationOptions)
 
-class RenderEngineInterpreterDrawImage[F[_] : Monad](W: DrawImage[F], D: Dom[F])
-  extends RenderEngine[F, InitializationOptions, InitializationError, RenderContext, WebGLTexture] {
+class RenderEngineInterpreterDrawImage[F[_]: Monad](W: DrawImage[F], D: Dom[F])
+    extends RenderEngine[F, InitializationOptions, InitializationError, RenderContext, WebGLTexture] {
 
   val vertSrc =
     """
@@ -67,12 +71,12 @@ class RenderEngineInterpreterDrawImage[F[_] : Monad](W: DrawImage[F], D: Dom[F])
   def initialize(options: InitializationOptions): F[Either[InitializationError, RenderContext]] =
     for {
       canvas <- W.createFullSizeCanvas()
-      _ <- D.appendToBody(canvas)
+      _      <- D.appendToBody(canvas)
 
       projection = Matrix4.forPerspective(90, canvas.width / canvas.height, 0.3f, 100f)
 
       fragmentShader <- W.compileFragmentShader(fragSrc)
-      vertexShader <- W.compileVertexShader(vertSrc)
+      vertexShader   <- W.compileVertexShader(vertSrc)
 
       program <- (
         vertexShader.leftMap(InitializationError.vertex),
@@ -80,7 +84,7 @@ class RenderEngineInterpreterDrawImage[F[_] : Monad](W: DrawImage[F], D: Dom[F])
         .mapN((v, f) => W.createProgram(v, f).map(_.leftMap(InitializationError.program)))
         .flatSequence
 
-      images <- options.textures.traverse(D.createImageElement)
+      images   <- options.textures.traverse(D.createImageElement)
       textures <- images.traverse(W.createTextureInfo)
 
     } yield

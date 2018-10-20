@@ -29,6 +29,7 @@ object EngineProgram {
 
     val eye = Matrix4.rotateAround(0, 0, 0, offsetY, offsetZ)
     val camera = Camera(eye, Vector4(0, 0, 0, 0))
+    val doNothing = (old: RenderObject[Tex], keys: Set[Key]) => old
     val track = RenderObject(
       pos = Pos2D(10, -9),
       height = 30,
@@ -36,14 +37,16 @@ object EngineProgram {
       rotation = 0,
       modeSeven = false,
       tex = textures("track"),
-      behaviour = (old: RenderObject[Tex], keys) => old)
+      behaviour = doNothing)
+
     val car = RenderObject(
-      Pos2D(0, 0),
-      -0.7f,
-      0.75f,
-      0,
-      true,
-      textures("car"), { (old: RenderObject[Tex], keys) =>
+      pos = Pos2D(0, 0),
+      height = -0.7f,
+      width = 0.75f,
+      rotation = 0,
+      modeSeven = true,
+      tex = textures("car"),
+      behaviour = { (old: RenderObject[Tex], keys) =>
         if (keys.isPressed(Up) ^ keys.isPressed(Down)) {
           val ahead = if (keys.isPressed(Up)) 1.0f else -1.0f
           val newObj =
@@ -85,10 +88,10 @@ object EngineProgram {
 
     } else old
 
-  def simpleRace[F[_] : Monad, E](R: RenderEngine[F, InitializationOptions, E, RenderContext, WebGLTexture]): F[Unit] =
+  def simpleRace[F[_]: Monad, E](R: RenderEngine[F, InitializationOptions, E, RenderContext, WebGLTexture]): F[Unit] =
     R.initialize(
-      options = InitializationOptions(
-        backgroundColor = Rgba(0, 0, 0.12, 1.0),
-        textures = SortedMap("car" -> "car.png", "track" -> "racetrack.png")))
+        options = InitializationOptions(
+          backgroundColor = Rgba(0, 0, 0.12, 1.0),
+          textures = SortedMap("car" -> "car.png", "track" -> "racetrack.png")))
       .flatMap(_.traverse_(c => R.renderLoop(c, initial(c.textures), updateCam)))
 }
